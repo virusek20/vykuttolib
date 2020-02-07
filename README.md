@@ -1,0 +1,2 @@
+# VykuttoLib
+Vykuť.to lib is a collection of various utility classes and extensions collected over several ASP.NET Core projects that are used in various websites. The library includes various implementations of email senders, photo processing, searching queries and others services.
