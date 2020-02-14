@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using MimeKit;
 using vykuttolib.Configuration;
 
-namespace Vykut.to.Services.Mail
+namespace vykuttolib.Mail
 {
 	public sealed class SmtpEmailSender : IEmailSender, IDisposable
 	{
