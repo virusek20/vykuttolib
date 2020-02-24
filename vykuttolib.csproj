@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.43.0.1863" />
     <PackageReference Include="Magick.NET-Q16-x64" Version="7.14.5" />
     <PackageReference Include="MailKit" Version="2.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.0" />
