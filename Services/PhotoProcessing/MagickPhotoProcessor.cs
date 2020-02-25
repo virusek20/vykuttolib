@@ -7,13 +7,19 @@ namespace vykuttolib.Services.PhotoProcessing
 {
 	public class MagickPhotoProcessor : IPhotoProcessor
 	{
+		[Obsolete("Use the Stream overload instead, both use the same implementation internally")]
 		public byte[] ProcessUploadedImage(IFormFile photo, bool cropToSquare)
+		{
+			using var stream = photo.OpenReadStream();
+			return ProcessUploadedImage(stream, cropToSquare);
+		}
+
+		public byte[] ProcessUploadedImage(Stream stream, bool cropToSquare)
 		{
 			try
 			{
 				using var processedStream = new MemoryStream();
-				using var uploadedStream = photo.OpenReadStream();
-				using MagickImage image = new MagickImage(uploadedStream);
+				using MagickImage image = new MagickImage(stream);
 
 				if (cropToSquare)
 				{
