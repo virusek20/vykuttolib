@@ -13,7 +13,7 @@ using vykuttolib.Configuration;
 
 namespace vykuttolib.Services.GoogleDrive
 {
-    class GoogleDriveService
+    public class GoogleDriveService
     {
         private readonly GoogleDriveConfiguration _config = new GoogleDriveConfiguration();
         private readonly string[] _scopes = { DriveService.Scope.Drive };
@@ -42,14 +42,14 @@ namespace vykuttolib.Services.GoogleDrive
             request.Fields = "id";
             return await request.ExecuteAsync();
         }
-        public async Task<Google.Apis.Upload.IUploadProgress> UploadAsync(FileStream fileStream, string fileName, string folderId, Action<Google.Apis.Drive.v3.Data.File> UploadRequestResponseReceived)
+        public async Task<Google.Apis.Upload.IUploadProgress> UploadAsync(Stream stream, string fileName, string folderId, Action<Google.Apis.Drive.v3.Data.File> UploadRequestResponseReceived)
         {
             Google.Apis.Drive.v3.Data.File fileMetadata = new Google.Apis.Drive.v3.Data.File();
             fileMetadata.Name = fileName;
             fileMetadata.MimeType = "image/jpeg";
             fileMetadata.Parents = new List<string> { folderId };
             FilesResource.CreateMediaUpload request;
-            request = _service.Files.Create(fileMetadata, fileStream, "image/jpeg");
+            request = _service.Files.Create(fileMetadata, stream, "image/jpeg");
             request.Fields = "id, webViewLink, thumbnailLink";
             request.ResponseReceived += UploadRequestResponseReceived;
             return await request.UploadAsync();
