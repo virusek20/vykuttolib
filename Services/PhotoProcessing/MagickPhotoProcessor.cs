@@ -98,5 +98,37 @@ namespace vykuttolib.Services.PhotoProcessing
 				throw new InvalidDataException("Uploaded image could not be decoded by ImageMagick", e);
 			}
 		}
+
+		public TrimPhoto Trim(Stream stream)
+		{
+			var photo = new TrimPhoto();
+
+			try
+			{
+				using var processedStream = new MemoryStream();
+				using MagickImage image = new MagickImage(stream);
+
+				image.Trim();
+				photo.Width = image.Page.Width;
+				photo.Height = image.Page.Height;
+				photo.X = image.Page.X;
+				photo.Y = image.Page.Y;
+
+				image.RePage();
+
+				image.Write(processedStream, MagickFormat.Jpg);
+
+				processedStream.Seek(0, SeekOrigin.Begin);
+
+				using var reader = new BinaryReader(processedStream);
+				photo.Data = reader.ReadBytes((int)processedStream.Length);
+
+				return photo;
+			}
+			catch (MagickMissingDelegateErrorException e)
+			{
+				throw new InvalidDataException("Uploaded image could not be decoded by ImageMagick", e);
+			}
+		}
 	}
 }

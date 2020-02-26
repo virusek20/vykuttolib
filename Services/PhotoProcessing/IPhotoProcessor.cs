@@ -30,6 +30,13 @@ namespace vykuttolib.Services.PhotoProcessing
 		byte[] ProcessUploadedImage(Stream stream, bool cropToSquare);
 
 		/// <summary>
+		/// Trims an uniform edge around an image (without any noise) and returns both the trimmed image and page information
+		/// </summary>
+		/// <param name="stream">Input photo stream</param>
+		/// <returns>Trim data and information</returns>
+		TrimPhoto Trim(Stream stream);
+
+		/// <summary>
 		/// Converts a stream into a representation that can be both stored in the database and served to the user scaled to a desired resolution.
 		/// This format is JPG, unless specified by implemetation.
 		/// If the aspect ratios of desired size and input file don't match the image will be scaled while preserving original aspect ratio
