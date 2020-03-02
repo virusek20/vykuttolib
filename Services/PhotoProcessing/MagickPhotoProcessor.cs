@@ -8,13 +8,13 @@ namespace vykuttolib.Services.PhotoProcessing
 	public class MagickPhotoProcessor : IPhotoProcessor
 	{
 		[Obsolete("Use the Stream overload instead, both use the same implementation internally")]
-		public byte[] ProcessUploadedImage(IFormFile photo, bool cropToSquare)
+		public byte[] ProcessUploadedImage(IFormFile photo, bool cropToSquare, bool transparency)
 		{
 			using var stream = photo.OpenReadStream();
-			return ProcessUploadedImage(stream, cropToSquare);
+			return ProcessUploadedImage(stream, cropToSquare, transparency);
 		}
 
-		public byte[] ProcessUploadedImage(Stream stream, bool cropToSquare)
+		public byte[] ProcessUploadedImage(Stream stream, bool cropToSquare, bool transparency)
 		{
 			try
 			{
@@ -28,7 +28,8 @@ namespace vykuttolib.Services.PhotoProcessing
 					image.RePage();
 				}
 
-				image.Write(processedStream, MagickFormat.Jpg);
+				if (transparency) image.Write(processedStream, MagickFormat.Png);
+				else image.Write(processedStream, MagickFormat.Jpg);
 
 				processedStream.Seek(0, SeekOrigin.Begin);
 
@@ -75,7 +76,7 @@ namespace vykuttolib.Services.PhotoProcessing
 			}
 		}
 
-		public byte[] CreateThumbnail(IFormFile photo, int width, int height)
+		public byte[] CreateThumbnail(IFormFile photo, int width, int height, bool transparency)
 		{
 			try
 			{
@@ -86,7 +87,8 @@ namespace vykuttolib.Services.PhotoProcessing
 				image.Resize(width, height);
 				image.RePage();
 
-				image.Write(processedStream, MagickFormat.Jpg);
+				if (transparency) image.Write(processedStream, MagickFormat.Png);
+				else image.Write(processedStream, MagickFormat.Jpg);
 
 				processedStream.Seek(0, SeekOrigin.Begin);
 
@@ -99,7 +101,7 @@ namespace vykuttolib.Services.PhotoProcessing
 			}
 		}
 
-		public TrimPhoto Trim(Stream stream)
+		public TrimPhoto Trim(Stream stream, bool transparency)
 		{
 			var photo = new TrimPhoto();
 
@@ -116,7 +118,8 @@ namespace vykuttolib.Services.PhotoProcessing
 
 				image.RePage();
 
-				image.Write(processedStream, MagickFormat.Jpg);
+				if (transparency) image.Write(processedStream, MagickFormat.Png);
+				else image.Write(processedStream, MagickFormat.Jpg);
 
 				processedStream.Seek(0, SeekOrigin.Begin);
 
