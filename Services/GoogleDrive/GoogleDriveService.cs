@@ -42,14 +42,21 @@ namespace vykuttolib.Services.GoogleDrive
             request.Fields = "id";
             return await request.ExecuteAsync();
         }
+
+        [Obsolete("Use the version with explicit mimeType")]
         public async Task<Google.Apis.Upload.IUploadProgress> UploadAsync(Stream stream, string fileName, string folderId, Action<Google.Apis.Drive.v3.Data.File> UploadRequestResponseReceived)
+        {
+            return await UploadAsync(stream, fileName, folderId, "image/jpeg", UploadRequestResponseReceived);
+        }
+
+        public async Task<Google.Apis.Upload.IUploadProgress> UploadAsync(Stream stream, string fileName, string folderId, string mimeType, Action<Google.Apis.Drive.v3.Data.File> UploadRequestResponseReceived)
         {
             Google.Apis.Drive.v3.Data.File fileMetadata = new Google.Apis.Drive.v3.Data.File();
             fileMetadata.Name = fileName;
             fileMetadata.MimeType = "image/jpeg";
             fileMetadata.Parents = new List<string> { folderId };
             FilesResource.CreateMediaUpload request;
-            request = _service.Files.Create(fileMetadata, stream, "image/jpeg");
+            request = _service.Files.Create(fileMetadata, stream, mimeType);
             request.Fields = "id, webViewLink, thumbnailLink";
             request.ResponseReceived += UploadRequestResponseReceived;
             return await request.UploadAsync();
