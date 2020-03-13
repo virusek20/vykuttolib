@@ -111,8 +111,8 @@ namespace vykuttolib.Services.PhotoProcessing
 				using MagickImage image = new MagickImage(stream);
 
 				image.Trim();
-				photo.Width = image.Page.Width;
-				photo.Height = image.Page.Height;
+				photo.Width = image.Width;
+				photo.Height = image.Height;
 				photo.X = image.Page.X;
 				photo.Y = image.Page.Y;
 

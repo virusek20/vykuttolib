@@ -53,7 +53,7 @@ namespace vykuttolib.Services.GoogleDrive
         {
             Google.Apis.Drive.v3.Data.File fileMetadata = new Google.Apis.Drive.v3.Data.File();
             fileMetadata.Name = fileName;
-            fileMetadata.MimeType = "image/jpeg";
+            fileMetadata.MimeType = mimeType;
             fileMetadata.Parents = new List<string> { folderId };
             FilesResource.CreateMediaUpload request;
             request = _service.Files.Create(fileMetadata, stream, mimeType);
