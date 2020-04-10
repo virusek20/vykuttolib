@@ -22,10 +22,10 @@ namespace vykuttolib.Services.GoogleDrive
         public GoogleDriveService(IConfiguration config)
         {
             config.GetSection("GoogleDriveAPI").Bind(_config);
-            UserCredential credential;
+            GoogleCredential credential;
             using (var stream = new FileStream(_config.Credentials, FileMode.Open, FileAccess.Read))
             {
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, _scopes, "user", CancellationToken.None, new FileDataStore(_config.Token, true)).Result;
+                credential = GoogleCredential.FromStream(stream).CreateScoped(_scopes);
             }
             _service = new DriveService(new BaseClientService.Initializer()
             {
@@ -60,6 +60,16 @@ namespace vykuttolib.Services.GoogleDrive
             request.Fields = "id, webViewLink, thumbnailLink";
             request.ResponseReceived += UploadRequestResponseReceived;
             return await request.UploadAsync();
+        }
+        public void ShareFile(string fileId)
+        {
+            Permission newPermission = new Permission
+            {
+                Type = "anyone",
+                Role = "reader"
+            };
+
+            _service.Permissions.Create(newPermission, fileId).Execute();
         }
         public async Task<Permission> AddPermissionAsync(string fileId, string type, string role)
         {
