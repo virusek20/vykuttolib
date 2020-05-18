@@ -57,7 +57,7 @@ namespace vykuttolib.Services.GoogleDrive
             fileMetadata.Parents = new List<string> { folderId };
             FilesResource.CreateMediaUpload request;
             request = _service.Files.Create(fileMetadata, stream, mimeType);
-            request.Fields = "id, webViewLink, thumbnailLink";
+            request.Fields = "id, webContentLink, thumbnailLink";
             request.ResponseReceived += UploadRequestResponseReceived;
             return await request.UploadAsync();
         }
