@@ -61,6 +61,7 @@ namespace vykuttolib.Services.GoogleDrive
             request.ResponseReceived += UploadRequestResponseReceived;
             return await request.UploadAsync();
         }
+
         public void ShareFile(string fileId)
         {
             Permission newPermission = new Permission
@@ -71,6 +72,7 @@ namespace vykuttolib.Services.GoogleDrive
 
             _service.Permissions.Create(newPermission, fileId).Execute();
         }
+
         public async Task<Permission> AddPermissionAsync(string fileId, string type, string role)
         {
             Permission newPermission = new Permission();
@@ -78,10 +80,12 @@ namespace vykuttolib.Services.GoogleDrive
             newPermission.Role = role;
             return await _service.Permissions.Create(newPermission, fileId).ExecuteAsync();
         }
+
         public async Task<string> DeleteFileAsync(string fileId)
         {
             return await _service.Files.Delete(fileId).ExecuteAsync();
         }
+        
         public List<Google.Apis.Drive.v3.Data.File> List(string folderId)
         {
             List<Google.Apis.Drive.v3.Data.File> res = new List<Google.Apis.Drive.v3.Data.File>();
@@ -97,6 +101,17 @@ namespace vykuttolib.Services.GoogleDrive
                 }
             }
             return res;
+        }
+
+        public async Task<Google.Apis.Drive.v3.Data.File> Copy(string fileId, string targetDirectoryId)
+        {
+            var copyRequest = _service.Files.Copy(new Google.Apis.Drive.v3.Data.File
+            {
+                Parents = new List<string> { targetDirectoryId },
+            }, fileId);
+
+            copyRequest.Fields = "id, webContentLink, thumbnailLink";
+            return await copyRequest.ExecuteAsync();
         }
     }
 }
