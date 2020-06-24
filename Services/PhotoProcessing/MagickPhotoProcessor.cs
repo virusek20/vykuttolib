@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ImageMagick;
 using Microsoft.AspNetCore.Http;
 
@@ -132,6 +134,68 @@ namespace vykuttolib.Services.PhotoProcessing
 			{
 				throw new InvalidDataException("Uploaded image could not be decoded by ImageMagick", e);
 			}
+		}
+
+		public List<TrimPhoto> ProcessUploadedImage(Stream stream, bool cropToSquare, List<Slice> slices, bool transparency = false)
+		{
+			var photos = new List<TrimPhoto>();
+			using MagickImage image = new MagickImage(stream);
+
+			var vSlices = slices.Where(s => s.Direction == Slice.SliceDirection.Vertical);
+			var hSlices = slices.Where(s => s.Direction == Slice.SliceDirection.Horizontal);
+
+			// Top left corner
+			var row = new List<int> { 0 };
+			// All points along top edge
+			foreach (var vSlice in vSlices) row.Add(vSlice.Coordinate);
+			// Top right
+			row.Add(image.Width);
+
+			// Top left corner
+			var column = new List<int> { 0 };
+			// All points along left edge
+			foreach (var hSlice in hSlices) column.Add(hSlice.Coordinate);
+			// Bottom left
+			column.Add(image.Height);
+
+			for (int i = 0; i < row.Count - 1; i++)
+			{
+				for (int j = 0; j < column.Count - 1; j++)
+				{
+					stream.Seek(0, SeekOrigin.Begin);
+					using var processedStream = new MemoryStream();
+					using MagickImage spliceImage = new MagickImage(stream);
+
+					spliceImage.Crop(new MagickGeometry
+					{
+						Width = row[i + 1] - row[i],
+						Height = column[j + 1] - column[j],
+						X = row[i],
+						Y = column[j]
+					});
+
+					spliceImage.RePage();
+
+					if (transparency) spliceImage.Write(processedStream, MagickFormat.Png);
+					else spliceImage.Write(processedStream, MagickFormat.Jpg);
+
+					processedStream.Seek(0, SeekOrigin.Begin);
+
+					using var reader = new BinaryReader(processedStream);
+					var photo = new TrimPhoto
+					{
+						Data = reader.ReadBytes((int)processedStream.Length),
+						Width = spliceImage.Width,
+						Height = spliceImage.Height,
+						X = row[i],
+						Y = column[j]
+					};
+
+					photos.Add(photo);
+				}
+			}
+
+			return photos;
 		}
 	}
 }

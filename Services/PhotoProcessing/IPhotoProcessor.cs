@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace vykuttolib.Services.PhotoProcessing
@@ -30,6 +31,18 @@ namespace vykuttolib.Services.PhotoProcessing
 		/// <param name="transparency">Whether the out photo should have transparency</param>
 		/// <returns>Optimized photo data</returns>
 		byte[] ProcessUploadedImage(Stream stream, bool cropToSquare, bool transparency = false);
+
+		/// <summary>
+		/// Converts a stream into a representation that can be both stored in the database and served to the user.
+		/// This format is JPG for non-transparent and PNG for transparent, unless specified by implemetation.
+		/// This image is then spliced into multiple subimages depending on <paramref name="slices"/>
+		/// </summary>
+		/// <param name="stream">Input photo stream</param>
+		/// <param name="cropToSquare">Whether the input photo should be cropped to a square</param>
+		/// <param name="transparency">Whether the out photo should have transparency</param>
+		/// <param name="slices">Slicing information used for creating subimages</param>
+		/// <returns>List of created subimages</returns>
+		List<TrimPhoto> ProcessUploadedImage(Stream stream, bool cropToSquare, List<Slice> slices, bool transparency = false);
 
 		/// <summary>
 		/// Trims an uniform edge around an image (without any noise) and returns both the trimmed image and page information
