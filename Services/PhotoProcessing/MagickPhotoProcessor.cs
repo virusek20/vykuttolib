@@ -141,8 +141,13 @@ namespace vykuttolib.Services.PhotoProcessing
 			var photos = new List<TrimPhoto>();
 			using MagickImage image = new MagickImage(stream);
 
-			var vSlices = slices.Where(s => s.Direction == Slice.SliceDirection.Vertical);
-			var hSlices = slices.Where(s => s.Direction == Slice.SliceDirection.Horizontal);
+			var vSlices = slices
+				.Where(s => s.Direction == Slice.SliceDirection.Vertical)
+				.OrderBy(s => s.Coordinate);
+
+			var hSlices = slices
+				.Where(s => s.Direction == Slice.SliceDirection.Horizontal)
+				.OrderBy(s => s.Coordinate);
 
 			// Top left corner
 			var row = new List<int> { 0 };
