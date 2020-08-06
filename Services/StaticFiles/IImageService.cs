@@ -7,6 +7,7 @@ namespace vykuttolib.Services.StaticFiles
     /// <summary>
     /// Stores images on local storage
     /// </summary>
+    [Obsolete]
     public interface IImageService
     {
         public struct FileUpload

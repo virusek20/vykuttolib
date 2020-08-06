@@ -8,6 +8,7 @@ using static vykuttolib.Services.StaticFiles.IImageService;
 
 namespace vykuttolib.Services.StaticFiles
 {
+    [Obsolete]
     public class ImageService : IImageService
     {
         private readonly FilePathConfiguration _config = new FilePathConfiguration();
