@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,18 +9,6 @@ namespace vykuttolib.Services.PhotoProcessing
 	/// </summary>
 	public interface IPhotoProcessor
 	{
-		/// <summary>
-		/// !DEPRECATED!
-		/// Converts a stream into a representation that can be both stored in the database and served to the user.
-		/// This format is JPG for non-transparent and PNG for transparent, unless specified by implemetation.
-		/// </summary>
-		/// <param name="photo">Input photo file</param>
-		/// <param name="cropToSquare">Whether the input photo should be cropped to a square</param>
-		/// <param name="transparency">Whether the out photo should have transparency</param>
-		/// <returns>Optimized photo data</returns>
-		[Obsolete("Use the Stream overload instead, both use the same implementation internally")]
-		byte[] ProcessUploadedImage(IFormFile photo, bool cropToSquare, bool transparency = false);
-
 		/// <summary>
 		/// Converts a stream into a representation that can be both stored in the database and served to the user.
 		/// This format is JPG for non-transparent and PNG for transparent, unless specified by implemetation.

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,13 +9,6 @@ namespace vykuttolib.Services.PhotoProcessing
 {
 	public class MagickPhotoProcessor : IPhotoProcessor
 	{
-		[Obsolete("Use the Stream overload instead, both use the same implementation internally")]
-		public byte[] ProcessUploadedImage(IFormFile photo, bool cropToSquare, bool transparency)
-		{
-			using var stream = photo.OpenReadStream();
-			return ProcessUploadedImage(stream, cropToSquare, transparency);
-		}
-
 		public byte[] ProcessUploadedImage(Stream stream, bool cropToSquare, bool transparency)
 		{
 			try
