@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -71,13 +71,12 @@ namespace vykuttolib.Services.PhotoProcessing
 			}
 		}
 
-		public byte[] CreateThumbnail(IFormFile photo, int width, int height, bool transparency)
+		public byte[] CreateThumbnail(Stream stream, int width, int height, bool transparency)
 		{
 			try
 			{
 				using var processedStream = new MemoryStream();
-				using var uploadedStream = photo.OpenReadStream();
-				using MagickImage image = new MagickImage(uploadedStream);
+				using MagickImage image = new MagickImage(stream);
 
 				image.Resize(width, height);
 				image.RePage();
@@ -195,5 +194,18 @@ namespace vykuttolib.Services.PhotoProcessing
 
 			return photos;
 		}
-	}
+
+        public (int w, int h) GetDimensions(Stream stream)
+        {
+			try
+			{
+				using MagickImage image = new MagickImage(stream);
+				return (image.Width, image.Height);
+			}
+			catch (MagickMissingDelegateErrorException e)
+			{
+				throw new InvalidDataException("Uploaded image could not be decoded by ImageMagick", e);
+			}
+		}
+    }
 }

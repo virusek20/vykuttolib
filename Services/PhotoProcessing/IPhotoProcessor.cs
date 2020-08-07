@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.IO;
 
@@ -43,12 +43,12 @@ namespace vykuttolib.Services.PhotoProcessing
 		/// This format is JPG for non-transparent and PNG for transparent, unless specified by implemetation.
 		/// If the aspect ratios of desired size and input file don't match the image will be scaled while preserving original aspect ratio
 		/// </summary>
-		/// <param name="photo">Input photo file</param>
+		/// <param name="stream">Input photo stream</param>
 		/// <param name="width">Target width</param>
 		/// <param name="height">Target height</param>
 		/// <param name="transparency">Whether the out photo should have transparency</param>
 		/// <returns>Thumbnail data</returns>
-		byte[] CreateThumbnail(IFormFile photo, int width, int height, bool transparency = false);
+		byte[] CreateThumbnail(Stream stream, int width, int height, bool transparency = false);
 
 		/// <summary>
 		/// Attempts to read EXIF data of an image and parse out the GPS coordinates of the photo.
@@ -57,5 +57,12 @@ namespace vykuttolib.Services.PhotoProcessing
 		/// <param name="photo">Input photo file</param>
 		/// <returns>GPS coordinates (latitude, longitude) or null</returns>
 		(double, double)? GetExifGpsCoordinates(IFormFile photo);
+
+		/// <summary>
+		/// Gets the width and height of an image
+		/// </summary>
+		/// <param name="stream">Input photo stream</param>
+		/// <returns>Witdh, Height of the image</returns>
+		(int w, int h) GetDimensions(Stream stream);
 	}
 }
