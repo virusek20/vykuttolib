@@ -82,5 +82,12 @@ namespace vykuttolib.Services.StaticFiles
         /// </summary>
         /// <param name="groupIdentifier">Identifier of group to be removed</param>
         Task RemoveGroup(string groupIdentifier);
+
+        /// <summary>
+        /// Resolves an identefier into an Url pointing to that resource.
+        /// </summary>
+        /// <param name="fileIdentifier">Requested file</param>
+        /// <returns>Link to file</returns>
+        Task<Uri> ResolveIdentifier(string fileIdentifier);
     }
 }
