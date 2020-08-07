@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
@@ -89,5 +90,12 @@ namespace vykuttolib.Services.StaticFiles
         /// <param name="fileIdentifier">Requested file</param>
         /// <returns>Link to file</returns>
         Task<Uri> ResolveIdentifier(string fileIdentifier);
+
+        /// <summary>
+        /// Opens a stream for reading a file. Writing is not guaranteed, but some specific implementations may support it.
+        /// </summary>
+        /// <param name="fileIdentifier">Requested file</param>
+        /// <returns>File stream</returns>
+        Task<Stream> OpenFile(string fileIdentifier);
     }
 }

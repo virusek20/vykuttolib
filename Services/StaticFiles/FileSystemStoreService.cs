@@ -157,6 +157,14 @@ namespace vykuttolib.Services.StaticFiles
             return Task.FromResult(new Uri(fileIdentifier, UriKind.Relative));
         }
 
+        public Task<Stream> OpenFile(string fileIdentifier)
+        {
+            var resourcePath = TranslateIdentifier(fileIdentifier);
+            if (!File.Exists(resourcePath)) throw new FileNotFoundException("Cannot find specified file", resourcePath);
+
+            return Task.FromResult(File.OpenRead(resourcePath) as Stream);
+        }
+
         private string TranslateIdentifier(string identifier)
         {
             if (identifier == null) throw new ArgumentNullException(nameof(identifier));
