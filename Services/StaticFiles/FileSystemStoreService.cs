@@ -128,10 +128,12 @@ namespace vykuttolib.Services.StaticFiles
             var groupPath = TranslateIdentifier(groupIdentifier);
             var filePath = Path.Combine(groupPath, identifier);
 
+            if (!Directory.Exists(groupPath)) Directory.CreateDirectory(groupPath);
+
             using var stream = File.Create(filePath);
             await data.CopyToAsync(stream);
 
-            stream.Seek(0, SeekOrigin.Begin);
+            stream.Seek(0, SeekOrigin.Begin); // TODO: This could cause problems
             var mimeCorrect = _mimeTypeService.CheckSignature(mimeType, stream);
             if (!mimeCorrect)
             {
