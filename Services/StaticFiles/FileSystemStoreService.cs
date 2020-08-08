@@ -145,7 +145,7 @@ namespace vykuttolib.Services.StaticFiles
             return new FileInfo
             {
                 Identifier = fileIdentifier,
-                Url = new Uri(fileIdentifier, UriKind.Relative)
+                Url = new Uri(filePath.Substring(filePath.IndexOf("/")), UriKind.Relative) // TODO: Hack, read endpoint from file?
             };
         }
 
@@ -154,7 +154,7 @@ namespace vykuttolib.Services.StaticFiles
             var resourcePath = TranslateIdentifier(fileIdentifier);
             if (!File.Exists(resourcePath)) throw new FileNotFoundException("Cannot find specified file", resourcePath);
 
-            return Task.FromResult(new Uri(fileIdentifier, UriKind.Relative));
+            return Task.FromResult(new Uri(resourcePath.Substring(resourcePath.IndexOf("/")), UriKind.Relative));  // TODO: Hack, read endpoint from file?
         }
 
         public Task<Stream> OpenFile(string fileIdentifier)
