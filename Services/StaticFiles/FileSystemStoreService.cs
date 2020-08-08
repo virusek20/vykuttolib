@@ -108,21 +108,21 @@ namespace vykuttolib.Services.StaticFiles
         public async Task<FileInfo> StoreBytes(byte[] data, string groupIdentifier, string mimeType)
         {
             using var ms = new MemoryStream(data);
-            return await Store(ms, groupIdentifier, mimeType);
+            return await StoreStream(ms, groupIdentifier, mimeType);
         }
 
         public async Task<FileInfo> StoreFormFile(IFormFile data, string groupIdentifier, string mimeType)
         {
             using var s = data.OpenReadStream();
-            return await Store(s, groupIdentifier, mimeType);
+            return await StoreStream(s, groupIdentifier, mimeType);
         }
 
         public async Task<FileInfo> StoreMultipartFile(MultipartSection data, string groupIdentifier, string mimeType)
         {
-            return await Store(data.Body, groupIdentifier, mimeType);
+            return await StoreStream(data.Body, groupIdentifier, mimeType);
         }
 
-        private async Task<FileInfo> Store(Stream data, string groupIdentifier, string mimeType)
+        public  async Task<FileInfo> StoreStream(Stream data, string groupIdentifier, string mimeType)
         {
             var identifier = GenerateRandomIdentifier(mimeType);
             var groupPath = TranslateIdentifier(groupIdentifier);

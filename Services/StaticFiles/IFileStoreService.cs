@@ -48,6 +48,16 @@ namespace vykuttolib.Services.StaticFiles
         Task<FileInfo> StoreMultipartFile(MultipartSection data, string groupIdentifier, string mimeType);
 
         /// <summary>
+        /// Stores the entire content of a stream in the store under a group
+        /// New group will be created if it doesn't exist yet
+        /// </summary>
+        /// <param name="data">Stored data</param>
+        /// <param name="groupIdentifier">Target group identifier</param>
+        /// <param name="extension">MimeType of data</param>
+        /// <returns></returns>
+        Task<FileInfo> StoreStream(Stream data, string groupIdentifier, string mimeType);
+
+        /// <summary>
         /// Copies a file from one group to another, file identifier will be reused in target group
         /// </summary>
         /// <param name="sourceIdentifier">Source file identifier</param>
