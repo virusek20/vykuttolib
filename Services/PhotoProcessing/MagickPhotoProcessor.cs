@@ -207,5 +207,30 @@ namespace vykuttolib.Services.PhotoProcessing
 				throw new InvalidDataException("Uploaded image could not be decoded by ImageMagick", e);
 			}
 		}
+
+        public byte[] ProcessUploadedImage(Stream stream, CropTransform crop, bool transparency = false)
+        {
+			try
+			{
+				using var processedStream = new MemoryStream();
+				using MagickImage image = new MagickImage(stream);
+
+				var magickCrop = new MagickGeometry(crop.X, crop.Y, crop.Width, crop.Height);
+				image.Crop(magickCrop);
+				image.RePage();
+
+				if (transparency) image.Write(processedStream, MagickFormat.Png);
+				else image.Write(processedStream, MagickFormat.Jpg);
+
+				processedStream.Seek(0, SeekOrigin.Begin);
+
+				using var reader = new BinaryReader(processedStream);
+				return reader.ReadBytes((int)processedStream.Length);
+			}
+			catch (MagickMissingDelegateErrorException e)
+			{
+				throw new InvalidDataException("Uploaded image could not be decoded by ImageMagick", e);
+			}
+		}
     }
 }

@@ -32,6 +32,17 @@ namespace vykuttolib.Services.PhotoProcessing
 		List<TrimPhoto> ProcessUploadedImage(Stream stream, bool cropToSquare, List<Slice> slices, bool transparency = false);
 
 		/// <summary>
+		/// Converts a stream into a representation that can be both stored in the database and served to the user.
+		/// This format is JPG for non-transparent and PNG for transparent, unless specified by implemetation.
+		/// This image is then dropped depending on <paramref name="crop"/>
+		/// </summary>
+		/// <param name="stream">Input photo stream</param>
+		/// <param name="crop">Position and dimension of the cropped part</param>
+		/// <param name="transparency">Whether the out photo should have transparency</param>
+		/// <returns>Optimized and cropped photo data</returns>
+		byte[] ProcessUploadedImage(Stream stream, CropTransform crop, bool transparency = false);
+
+		/// <summary>
 		/// Trims an uniform edge around an image (without any noise) and returns both the trimmed image and page information
 		/// </summary>
 		/// <param name="stream">Input photo stream</param>
