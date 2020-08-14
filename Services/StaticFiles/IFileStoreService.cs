@@ -102,6 +102,14 @@ namespace vykuttolib.Services.StaticFiles
         Task<Uri> ResolveIdentifier(string fileIdentifier);
 
         /// <summary>
+        /// Determines whether a file with a given identifier exists in a group
+        /// </summary>
+        /// <param name="fileIdentifier">Checked file</param>
+        /// <param name="fileIdentifier">Checked group</param>
+        /// <returns>Whether or not file exists</returns>
+        Task<bool> FileExistsInGroup(string fileIdentifier, string groupIdentifier);
+
+        /// <summary>
         /// Opens a stream for reading a file. Writing is not guaranteed, but some specific implementations may support it.
         /// </summary>
         /// <param name="fileIdentifier">Requested file</param>

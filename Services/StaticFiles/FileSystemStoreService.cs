@@ -181,5 +181,14 @@ namespace vykuttolib.Services.StaticFiles
         {
            return $"{Guid.NewGuid()}.{_mimeTypeService.DetermineExtension(mimeType) ?? "unknown"}";
         }
+
+        public Task<bool> FileExistsInGroup(string fileIdentifier, string groupIdentifier)
+        {
+            var groupPath = TranslateIdentifier(groupIdentifier);
+            if (!Directory.Exists(groupPath)) return Task.FromResult(false); // Not sure about this
+
+            var resourcePath = Path.Combine(groupPath, fileIdentifier);
+            return Task.FromResult(File.Exists(resourcePath));
+        }
     }
 }
