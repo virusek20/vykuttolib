@@ -7,48 +7,48 @@ using vykuttolib.Configuration;
 
 namespace vykuttolib.Services.StaticFiles
 {
-    public class XmlMimeTypeService : IMimeTypeService
-    {
-        private readonly MimeTypeConfiguration _configuration = new MimeTypeConfiguration();
-        private readonly AllowedMimeTypes _allowedTypes;
+	public class XmlMimeTypeService : IMimeTypeService
+	{
+		private readonly MimeTypeConfiguration _configuration = new MimeTypeConfiguration();
+		private readonly AllowedMimeTypes _allowedTypes;
 
-        public XmlMimeTypeService(IConfiguration config)
-        {
-            config.GetSection("AllowedMimeTypes").Bind(_configuration);
+		public XmlMimeTypeService(IConfiguration config)
+		{
+			config.GetSection("AllowedMimeTypes").Bind(_configuration);
 
-            var serializer = new XmlSerializer(typeof(AllowedMimeTypes));
-            using var xmlDoc = File.OpenRead(_configuration.XmlFilePath);
+			var serializer = new XmlSerializer(typeof(AllowedMimeTypes));
+			using var xmlDoc = File.OpenRead(_configuration.XmlFilePath);
 
-            _allowedTypes = serializer.Deserialize(xmlDoc) as AllowedMimeTypes;
-        }
+			_allowedTypes = serializer.Deserialize(xmlDoc) as AllowedMimeTypes;
+		}
 
-        public bool CheckSignature(string mimeType, Stream data)
-        {
-            var type = _allowedTypes.MimeType.FirstOrDefault(t => t.Name.Equals(mimeType, StringComparison.OrdinalIgnoreCase));
-            if (type == null) return false; // Not allowed type
+		public bool CheckSignature(string mimeType, Stream data)
+		{
+			var type = _allowedTypes.MimeType.FirstOrDefault(t => t.Name.Equals(mimeType, StringComparison.OrdinalIgnoreCase));
+			if (type == null) return false; // Not allowed type
 
-            var signatures = type.BinarySignatures.ToList();
-            var longestSignature = signatures.Select(s => s.Length).OrderByDescending(l => l).FirstOrDefault();
-            if (longestSignature == 0) return false; // Either empty or no signatures defined
+			var signatures = type.BinarySignatures.ToList();
+			var longestSignature = signatures.Select(s => s.Length).OrderByDescending(l => l).FirstOrDefault();
+			if (longestSignature == 0) return false; // Either empty or no signatures defined
 
-            var checkedData = new byte[longestSignature].AsSpan();
-            data.Read(checkedData);
+			var checkedData = new byte[longestSignature*2].AsSpan();
+			data.Read(checkedData);
 
-            foreach (var signature in signatures)
-            {
-                var signatureSpan = signature.AsSpan();
-                var matchingData = checkedData.Slice(0, signatureSpan.Length);
+			foreach (var signature in signatures)
+			{
+				var signatureSpan = signature.AsSpan();
+				var matchingData = checkedData.Slice(4, signatureSpan.Length);
 
-                if (signatureSpan.SequenceEqual(matchingData)) return true;
-            }
+				if (signatureSpan.SequenceEqual(matchingData)) return true;
+			}
 
-            return false;
-        }
+			return false;
+		}
 
-        public string DetermineExtension(string mimeType)
-        {
-            var type = _allowedTypes.MimeType.FirstOrDefault(t => t.Name.Equals(mimeType, StringComparison.OrdinalIgnoreCase));
-            return type?.Extension;
-        }
-    }
+		public string DetermineExtension(string mimeType)
+		{
+			var type = _allowedTypes.MimeType.FirstOrDefault(t => t.Name.Equals(mimeType, StringComparison.OrdinalIgnoreCase));
+			return type?.Extension;
+		}
+	}
 }
