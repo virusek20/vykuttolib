@@ -23,6 +23,8 @@ namespace vykuttolib.Services.StaticFiles
     {
         public string Name { get; set; }
         public string Extension { get; set; }
+        [XmlAttribute("Offset")]
+        public int Offset { get; set; }
 
         [XmlElement("Signature")]
         public string[] Signatures { get; set; }

@@ -28,16 +28,18 @@ namespace vykuttolib.Services.StaticFiles
 			if (type == null) return false; // Not allowed type
 
 			var signatures = type.BinarySignatures.ToList();
-			var longestSignature = signatures.Select(s => s.Length).OrderByDescending(l => l).FirstOrDefault();
+			var offset = type.Offset;
+
+			var longestSignature = signatures.Select(s => s.Length + offset).OrderByDescending(l => l).FirstOrDefault();
 			if (longestSignature == 0) return false; // Either empty or no signatures defined
 
-			var checkedData = new byte[longestSignature*2].AsSpan();
+			var checkedData = new byte[longestSignature].AsSpan();
 			data.Read(checkedData);
 
 			foreach (var signature in signatures)
 			{
 				var signatureSpan = signature.AsSpan();
-				var matchingData = checkedData.Slice(4, signatureSpan.Length);
+				var matchingData = checkedData.Slice(offset); // Ignore first offset bytes
 
 				if (signatureSpan.SequenceEqual(matchingData)) return true;
 			}
