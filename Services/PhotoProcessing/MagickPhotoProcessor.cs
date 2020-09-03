@@ -215,7 +215,7 @@ namespace vykuttolib.Services.PhotoProcessing
 				using var processedStream = new MemoryStream();
 				using MagickImage image = new MagickImage(stream);
 
-				var magickCrop = new MagickGeometry(crop.X, crop.Y, crop.Width, crop.Height);
+				var magickCrop = new MagickGeometry((int)crop.X, (int)crop.Y, (int)crop.Width, (int)crop.Height);
 				image.Crop(magickCrop);
 				image.RePage();
 
