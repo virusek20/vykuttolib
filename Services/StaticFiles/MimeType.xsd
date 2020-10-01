@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="MimeType"
+    targetNamespace="http://tempuri.org/MimeType.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/MimeType.xsd"
+    xmlns:mstns="http://tempuri.org/MimeType.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="AllowedMimeTypes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MimeType" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" type="xs:string" />
+              <xs:element name="Extension" type="xs:string" />
+              <xs:element name="Signature" type="xs:base64Binary" maxOccurs="unbounded" />
+            </xs:sequence>
+            <xs:attribute name="Offset" type="xs:nonNegativeInteger" use="optional" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

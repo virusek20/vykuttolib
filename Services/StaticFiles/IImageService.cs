@@ -7,15 +7,22 @@ namespace vykuttolib.Services.StaticFiles
     /// <summary>
     /// Stores images on local storage
     /// </summary>
+    [Obsolete]
     public interface IImageService
     {
+        public struct FileUpload
+        {
+            public string RelativePath;
+            public string Url;
+        }
+
         /// <summary>
         /// Saves an uploaded file to the static files directory under a random GUID name
         /// The name is not guranteed to be unique, but it "should" be fine
         /// </summary>
         /// <param name="file">Uploaded file</param>
         /// <returns>Relative path to file</returns>
-        Task<string> OnPostUploadAsync(IFormFile file);
+        Task<FileUpload> OnPostUploadAsync(IFormFile file, string folderName);
 
         /// <summary>
         /// Saves a file file to the static files directory under a random GUID name
@@ -23,7 +30,15 @@ namespace vykuttolib.Services.StaticFiles
         /// </summary>
         /// <param name="file">File data</param>
         /// <returns>Relative path to file</returns>
-        Task<string> OnPostUploadAsync(byte[] file);
+        Task<FileUpload> OnPostUploadAsync(byte[] file, string folderName);
+
+        /// <summary>
+        /// Copies a file from one path to another
+        /// </summary>
+        /// <param name="sourceFile">Source file</param>
+        /// <param name="destFile">Destination file</param>
+        /// <returns>Relative path to file</returns>
+        Task<FileUpload> CopyFile(string sourceFile, string destFile);
 
         /// <summary>
         /// Removes a file from the static resource folder
